@@ -1,0 +1,52 @@
+﻿body {
+    background-color: #EAE5E5;
+}
+
+button.textbutton {
+    background-color: transparent;
+    float: right;
+    color: #9C8A7E;
+    border: none;
+    text-decoration: none;
+    outline: none;
+    font-family: proxima-nova, sans-serif;
+    font-size: 24px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    backface-visibility: hidden;
+}
+
+    button.textbutton:hover {
+        -webkit-transition-duration: 0.8s; /* Safari */
+        transition-duration: 0.8s;
+        color: #555252;
+    }
+
+h1 {
+    color: #9C8A7E;
+    text-align: center;
+    font-size: 80px;
+    font-weight: normal;
+    letter-spacing: -0.03em;
+    font-family: proxima-nova, sans-serif;
+    display: inline;
+}
+
+#NameHeading {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#Buttons {
+    left: inherit;
+    right: inherit;
+    float: right;
+}
+
+p {
+    color: #555252;
+    font-weight: bold;
+    font-family: proxima-nova, sans-serif;
+}
