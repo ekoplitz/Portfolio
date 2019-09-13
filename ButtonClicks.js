@@ -16,7 +16,7 @@ function onButtonPressed(buttonId) {
     
     if (pressedButton != null) {
         pressedButton.style.color = "black";
-        pressedButton.style.transform = "translate(10%, 0%)";
+        pressedButton.style.transform = "perspective(1px) translate(10%, 0%)";
 
     }
 

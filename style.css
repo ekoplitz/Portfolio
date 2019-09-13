@@ -14,12 +14,15 @@ button.textbutton {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     backface-visibility: hidden;
+    -webkit-filter: blur(0.0px);
 }
 
     button.textbutton:hover {
         -webkit-transition-duration: 0.8s; /* Safari */
         transition-duration: 0.8s;
         color: #555252;
+        backface-visibility: hidden;
+        -webkit-filter: blur(0.0px);
     }
 
 h1 {
