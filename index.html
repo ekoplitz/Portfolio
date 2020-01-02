@@ -1,16 +1,84 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en">
+<html>
 <head>
-    <title>EricaKoplitz</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <title>Erica Koplitz's Portfolio</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://threejs.org/build/three.js"></script>
     <script src="ButtonClicks.js"></script>
+
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+
+        #top_text {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            z-index: 100;
+            display: block;
+            color: antiquewhite;
+            font-weight: normal;
+            font-size: 24px;
+            font-family: proxima-nova, sans-serif;
+        }
+
+        #bot_text {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            z-index: 100;
+            display: block;
+            color: antiquewhite;
+            font-weight: normal;
+            font-family: proxima-nova, sans-serif;
+            text-align: right;
+        }
+
+        button.textbutton {
+            background-color: transparent;
+            float: right;
+            color: antiquewhite;
+            border: none;
+            text-decoration: none;
+            outline: none;
+            font-size: 24px;
+            font-family: proxima-nova, sans-serif;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            backface-visibility: hidden;
+            -webkit-filter: blur(0.0px);
+        }
+
+            button.textbutton:hover {
+                cursor: pointer;
+                -webkit-transition-duration: 0.8s; /* Safari */
+                transition-duration: 0.8s;
+                color: sandybrown;
+                backface-visibility: hidden;
+                -webkit-filter: blur(0.0px);
+            }
+
+        #Buttons {
+            left: inherit;
+            right: inherit;
+            float: right;
+        }
+    </style>
 </head>
 <body>
-    <div id="NameHeading">
-        <h1 id="EricaKoplitz">ERICA KOPLITZ</h1>
-        <br />
-
+    <div id="top_text">
+        <h1 style="cursor: pointer; text-align: center;" id="HomeButton">Erica Koplitz</h1>
+        <p style="line-height: 0px; ">Software Developer. Shapes Wizard.</p>
+    </div>
+    <div id="bot_text">
         <div id="Buttons">
             <button class="textbutton" id="SkillsButton" onclick="onButtonPressed('SkillsButton')">Skills</button>
             <br />
@@ -21,6 +89,110 @@
             <button class="textbutton" id="AboutButton" onclick="onButtonPressed('AboutButton')">About</button>
         </div>
     </div>
+    <script>
+        // Vars
+        cubeState = 0; // 0 = rotate, 1 = straighten, 2 = straight
+        var cubeSpeed = 0.25;
 
+        // Scene
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        var light = new THREE.PointLight(0xffffed, 3, 50, 2);
+        light.position.set(5, 5, 3);
+        scene.add(light);
+
+        var light2 = new THREE.PointLight(0xa9a9cc, 1, 50, 2);
+        light2.position.set(-3, -3, 3);
+        scene.add(light2);
+
+        // Cube
+        var geometry = new THREE.BoxGeometry(0.1, 3, 0.1);
+
+        var material = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            metalness: 0
+
+        });
+
+        var cubes = [
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material),
+            new THREE.Mesh(geometry, material)
+        ];
+        cubes.forEach(cube => scene.add(cube));
+
+        camera.position.z = 5;
+
+        // Render
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (cubeState == 0) {
+                spinCubes();
+            } else if (cubeState == 1) {
+                straightCubes();
+            }
+            
+            renderer.render(scene, camera);
+        }
+
+        // Spinning cubes anim, speed relative to array position
+        function spinCubes() {
+            for (var i = 0; i < cubes.length; i++) {
+                var deltaRot = 0.0005 * (i * cubeSpeed + 1);
+                var newRot = (cubes[i].rotation.x + deltaRot) % (2 * Math.PI);
+                cubes[i].rotation.x = newRot;
+                cubes[i].rotation.z = newRot;
+            }
+        }
+
+        // Straighten cubes after spinning (x and z rots only)
+        function straightCubes() {
+            var allStraight = true;
+            for (var i = 0; i < cubes.length; i++) {
+                var rotX = cubes[i].rotation.x;
+                if (rotX > 0) {
+                    allStraight = false;
+                    var newRot = rotX * 0.75;
+                    if (newRot < 0.001) {
+                        newRot = 0;
+                    }
+                    cubes[i].rotation.x = newRot;
+                    cubes[i].rotation.z = newRot;
+                }
+            }
+
+            // When all cubes are straight, change cubeState
+            if (allStraight == true) {
+                cubeState = 2;
+            }
+        }
+        
+        animate();
+        window.addEventListener('resize', onWindowResize, false);
+
+        // Resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    </script>
 </body>
 </html>

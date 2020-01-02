@@ -1,24 +1,37 @@
 ﻿"use strict"
 
 var selectedButton = null;
+$(function () {
+    $('#HomeButton').click(function () { deselectButton() });
+});
 
 function onButtonPressed(buttonId) {
-
     var pressedButton = document.getElementById(buttonId);
+    setSelectedButton(pressedButton);
+}
 
-    //  Do nothing if pressed button is already selected
-    if (selectedButton == pressedButton) return;
-
-    // Set pressed button to selected button
+function deselectButton() {
     if (selectedButton != null) {
         selectedButton.style = "button.textbutton";
+        selectedButton = null;
+        cubeState = 0;
     }
-    
-    if (pressedButton != null) {
-        pressedButton.style.color = "black";
-        pressedButton.style.transform = "perspective(1px) translate(10%, 0%)";
+}
 
+function setSelectedButton(button) {
+
+    // Select new button
+    if (button != null) {
+        if (selectedButton == button) {
+            deselectButton();
+        }
+        else {
+            deselectButton();
+            button.style.color = "tomato";
+            button.style.transform = "perspective(1px) translate(10%, 0%)";
+
+            selectedButton = button;
+            cubeState = 1;
+        }
     }
-
-    selectedButton = pressedButton;
 }
